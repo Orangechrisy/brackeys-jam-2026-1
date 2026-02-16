@@ -13,3 +13,9 @@ shape = SubResource("CapsuleShape3D_onrkg")
 
 [node name="Camera3D" type="Camera3D" parent="." unique_id=826437112]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 0)
+
+[node name="Timer" type="Timer" parent="." unique_id=2014812251]
+wait_time = 0.5
+autostart = true
+
+[connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]

@@ -5,12 +5,11 @@ const SPEED = 5.0
 var mouse_captured: bool = false
 var look_dir: Vector2
 @onready var camera: Camera3D = $Camera3D
+@onready var timer: Timer = $Timer
 
 func _ready() -> void:
 	capture_mouse()
-
-func _process(_delta: float) -> void:
-	get_parent().get_node("MainShader").mesh.material.set_shader_parameter("noise_position", global_position)
+	timer.start()
 
 func _physics_process(delta: float) -> void:
 	# Get the input direction and handle the movement/deceleration.
@@ -19,7 +18,17 @@ func _physics_process(delta: float) -> void:
 	var forward: Vector3 = camera.global_transform.basis * Vector3(input_dir.x, 0, input_dir.y)
 	var walk_dir: Vector3 = Vector3(forward.x, 0, forward.z).normalized()
 	velocity = velocity.move_toward(walk_dir * SPEED * input_dir.length(), 100 * delta)
+	if timer.paused == false and velocity == Vector3(0.0, 0.0, 0.0):
+		timer.paused = true
+	elif timer.paused == true and velocity != Vector3(0.0, 0.0, 0.0):
+		timer.paused = false
 	move_and_slide()
+
+func _on_timer_timeout() -> void:
+	get_parent().get_node("MainShader").mesh.material.set_shader_parameter("noise_position", global_position)
+	get_parent().get_node("MainShader").mesh.material.set_shader_parameter("noise_time", Time.get_ticks_msec()/1000.0)
+	timer.start()
+	print("timer reset")
 
 func _unhandled_input(event: InputEvent) -> void:
 	if event is InputEventMouseMotion:
@@ -38,3 +47,4 @@ func capture_mouse() -> void:
 func release_mouse() -> void:
 	Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
 	mouse_captured = false
+	
