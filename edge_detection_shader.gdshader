@@ -13,8 +13,10 @@ uniform vec3 background_color: source_color = vec3(0.0);
 
 uniform float ping_width = 0.05;
 
-uniform vec3 noise_position;
-uniform float noise_time;
+const int noises_tracked = 10;
+uniform vec4 noise_points[noises_tracked];
+//uniform vec3 noise_position;
+//uniform float noise_time;
 
 const mat3 sobel_y = mat3(
 	vec3(1.0, 0.0, -1.0),
@@ -37,21 +39,16 @@ float linearize_depth(vec2 uv_coord, mat4 proj_matrix){
 	return linear_depth;
 }
 
-//float linearize_depth_alt(vec2 uv_coord, mat4 proj_matrix){
-	//float depth = texture(DEPTH_TEXTURE, uv_coord).x;
-	//vec3 ndc = vec3(uv_coord * 2.0 - 1.0, depth);
-	//vec4 view = proj_matrix * vec4(ndc, 1.0);
-	//view.xyz /= view.w;
-	//float linear_depth = -view.z;
-	//return linear_depth;
-//}
-
 vec3 normalize_normal(vec3 normal){
 	return normalize(normal * 2.0 - 1.0);
 }
 
 void vertex(){
 	POSITION = vec4(VERTEX.xy, 1.0, 1.0);
+}
+
+float remap(float num, float a1, float a2, float b1, float b2) {
+	return b1 + (num - a1) * (b2 - b1) / (a2 - a1);
 }
 
 void fragment() {
@@ -105,23 +102,44 @@ void fragment() {
 
 	float normal_edge = sqrt(pow(normal_edge_x, 2.0)+pow(normal_edge_y, 2.0));
 	
-	vec4 world = INV_VIEW_MATRIX * INV_PROJECTION_MATRIX * vec4(vec3(SCREEN_UV * 2.0 - 1.0, texture(DEPTH_TEXTURE, SCREEN_UV).x), 1.0);
-	vec3 position_world = world.xyz / world.w;
-	float dis = distance(position_world, noise_position);
-	float fading_time = smoothstep(noise_time + 0.25, noise_time - 0.25, TIME);
-	
 	ALBEDO = background_color;
-	if (dis < 15.0) {
-		if (normal_edge > normal_edge_threshold) {
-			ALBEDO = line_color * fading_time;
-		} else if (depth_edge > depth_edge_threshold_lower && normal_edge > 0.0) {
-			ALBEDO = line_color * fading_time;
-		} else if (depth_edge > depth_edge_threshold_upper) {
-			ALBEDO = line_color * fading_time;
+	
+	int most_recent = 0;
+	float noise_intensity = 0.0;
+	for (int i = 0; i < noises_tracked; i++) {
+		if (noise_points[i].w > 0.0) {
+			if (noise_points[i].w > noise_points[most_recent].w) {
+				most_recent = i;
+			}
+			float inv_time = remap(pow(noise_points[i].w, 1.0), 1, 0, 0.01, 0.99);
+			vec4 world = INV_VIEW_MATRIX * INV_PROJECTION_MATRIX * vec4(vec3(SCREEN_UV * 2.0 - 1.0, texture(DEPTH_TEXTURE, SCREEN_UV).x), 1.0);
+			vec3 position_world = world.xyz / world.w;
+			float distance_to_noise = distance(position_world, noise_points[i].xyz) / (inv_time * 15.0);
+			float shape = pow(max(0, 1.0 - distance_to_noise), 1.0);
+			noise_intensity += shape * sin(noise_points[i].w) * 5.0;
 		}
 	}
-	float radius = (TIME - noise_time + 0.5) * 15.0;
-	if (dis > radius - ping_width && dis < radius) {
-		ALBEDO = line_color;
+	clamp(noise_intensity, 0.0, 1.0);
+	
+	vec4 world = INV_VIEW_MATRIX * INV_PROJECTION_MATRIX * vec4(vec3(SCREEN_UV * 2.0 - 1.0, texture(DEPTH_TEXTURE, SCREEN_UV).x), 1.0);
+	vec3 position_world = world.xyz / world.w;
+	float dis = distance(position_world, noise_points[most_recent].xyz);
+	float fading_time = smoothstep(noise_points[most_recent].w + 0.25, noise_points[most_recent].w - 0.25, TIME);
+	
+	//if (dis < 15.0) {
+	if (normal_edge > normal_edge_threshold) {
+		ALBEDO = line_color * noise_intensity;
+	} else if (depth_edge > depth_edge_threshold_lower && normal_edge > 0.0) {
+		ALBEDO = line_color * noise_intensity;
+	} else if (depth_edge > depth_edge_threshold_upper) {
+		ALBEDO = line_color * noise_intensity;
+	}
+	//}
+	
+	if (noise_points[most_recent].w > 0.0) {
+		float radius = (1.0 - noise_points[most_recent].w) * 15.0;
+		if (dis > radius - ping_width && dis < radius) {
+			ALBEDO = line_color;
+		}
 	}
 }

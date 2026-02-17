@@ -7,9 +7,13 @@ var look_dir: Vector2
 @onready var camera: Camera3D = $Camera3D
 @onready var timer: Timer = $Timer
 
+var shader_array: Array[Vector4] = []
+var index: int = 0
+
 func _ready() -> void:
 	capture_mouse()
 	timer.start()
+	shader_array.resize(10)
 
 func _physics_process(delta: float) -> void:
 	# Get the input direction and handle the movement/deceleration.
@@ -25,10 +29,21 @@ func _physics_process(delta: float) -> void:
 	move_and_slide()
 
 func _on_timer_timeout() -> void:
-	get_parent().get_node("MainShader").mesh.material.set_shader_parameter("noise_position", global_position)
-	get_parent().get_node("MainShader").mesh.material.set_shader_parameter("noise_time", Time.get_ticks_msec()/1000.0)
+	shader_array = add_to_array(shader_array, global_position, Time.get_ticks_msec()/1000.0)
+	print(shader_array)
 	timer.start()
-	print("timer reset")
+
+func _process(delta: float) -> void:
+	for i in shader_array.size():
+		if shader_array[i].w > 0.0:
+			shader_array[i].w -= delta / 2.0;
+			clamp(shader_array[i].w, 0.0, 1.0)
+	get_parent().get_node("MainShader").mesh.material.set_shader_parameter("noise_points", shader_array)
+
+func add_to_array(a: Array, pos: Vector3, _t: float):
+	a[index] = Vector4(pos.x, pos.y, pos.z, 1.0)
+	index = (index + 1) % 10
+	return a
 
 func _unhandled_input(event: InputEvent) -> void:
 	if event is InputEventMouseMotion:
