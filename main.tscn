@@ -1,4 +1,4 @@
-[gd_scene format=3 uid="uid://caf4357qgc83v"]
+[gd_scene format=4 uid="uid://caf4357qgc83v"]
 
 [ext_resource type="PackedScene" uid="uid://bvirut2d6gisx" path="res://player.tscn" id="1_ig7tw"]
 [ext_resource type="Shader" uid="uid://cbl8yrhv8rhri" path="res://edge_detection_shader.gdshader" id="3_h2yge"]
@@ -27,12 +27,14 @@ height = 5.0
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_1bvp3"]
 render_priority = 0
 shader = ExtResource("3_h2yge")
-shader_parameter/depth_edge_threshold_lower = 0.15
+shader_parameter/depth_edge_threshold_lower = 0.0999999977648
 shader_parameter/depth_edge_threshold_upper = 0.3
-shader_parameter/normal_edge_threshold = 0.5
+shader_parameter/normal_edge_threshold = 0.30000000447036
 shader_parameter/line_color = Color(1, 1, 1, 1)
 shader_parameter/background_color = Color(0, 0, 0, 1)
-shader_parameter/noise_position = Vector3(0, 0, 0)
+shader_parameter/ping_width = 0.05
+shader_parameter/ping_distance = 20.0
+shader_parameter/noise_points = PackedVector4Array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
 
 [sub_resource type="QuadMesh" id="QuadMesh_lquwl"]
 material = SubResource("ShaderMaterial_1bvp3")

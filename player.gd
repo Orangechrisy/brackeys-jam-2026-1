@@ -12,8 +12,8 @@ var index: int = 0
 
 func _ready() -> void:
 	capture_mouse()
-	timer.start()
 	shader_array.resize(10)
+	_on_timer_timeout()
 
 func _physics_process(delta: float) -> void:
 	# Get the input direction and handle the movement/deceleration.

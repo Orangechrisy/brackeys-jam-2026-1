@@ -12,6 +12,7 @@ uniform vec3 line_color: source_color = vec3(1.0);
 uniform vec3 background_color: source_color = vec3(0.0);
 
 uniform float ping_width = 0.05;
+uniform float ping_distance = 20.0;
 
 const int noises_tracked = 10;
 uniform vec4 noise_points[noises_tracked];
@@ -109,16 +110,14 @@ void fragment() {
 			most_recent = i;
 		}
 		if (noise_points[i].w > 0.0) {
-			float inv_time = remap(pow(noise_points[i].w, 1.0), 1, 0, 0.01, 0.99);
+			float inv_time = remap(pow(noise_points[i].w, 5.0), 1, 0, 0.01, 0.99);
 			vec4 world = INV_VIEW_MATRIX * INV_PROJECTION_MATRIX * vec4(vec3(SCREEN_UV * 2.0 - 1.0, texture(DEPTH_TEXTURE, SCREEN_UV).x), 1.0);
 			vec3 position_world = world.xyz / world.w;
-			float distance_to_noise = distance(position_world, noise_points[i].xyz) / (inv_time * 15.0);
-			//float shape = pow(max(0, 1.0 - distance_to_noise), 1.0);
+			float distance_to_noise = distance(position_world, noise_points[i].xyz) / (inv_time * ping_distance);
 			float shape = sqrt(fract(max(0, 1.0 - distance_to_noise) * -1.0));
-			//float shape = pow(fract(max(0, 15.0 - distance_to_noise) * -1.0), 5.0);
-			noise_intensity += shape * noise_points[i].w;// * sin(noise_points[i].w) * 5.0;
+			noise_intensity += shape * noise_points[i].w;
 			
-			float radius = inv_time * 15.0;
+			float radius = inv_time * ping_distance;
 			float dis = distance(position_world, noise_points[i].xyz);
 			if (dis > radius - ping_width && dis < radius) {
 				ALBEDO = line_color * clamp(noise_intensity, 0.0, 1.0);
@@ -126,12 +125,7 @@ void fragment() {
 		}
 	}
 	clamp(noise_intensity, 0.0, 1.0);
-	
-	vec4 world = INV_VIEW_MATRIX * INV_PROJECTION_MATRIX * vec4(vec3(SCREEN_UV * 2.0 - 1.0, texture(DEPTH_TEXTURE, SCREEN_UV).x), 1.0);
-	vec3 position_world = world.xyz / world.w;
-	float dis = distance(position_world, noise_points[most_recent].xyz);
-	float fading_time = smoothstep(TIME + 0.25, TIME - 0.25, TIME);
-	
+
 	if (normal_edge > normal_edge_threshold) {
 		ALBEDO = line_color * noise_intensity;
 	} else if (depth_edge > depth_edge_threshold_lower && normal_edge > 0.0) {
@@ -139,9 +133,4 @@ void fragment() {
 	} else if (depth_edge > depth_edge_threshold_upper) {
 		ALBEDO = line_color * noise_intensity;
 	}
-	//ALBEDO = line_color * noise_intensity;
-	//float radius = (1.0 - noise_points[most_recent].w) * 15.0;
-	//if (dis > radius - ping_width && dis < radius) {
-		//ALBEDO = line_color * noise_intensity;
-	//}
 }
