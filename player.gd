@@ -35,9 +35,7 @@ func _on_timer_timeout() -> void:
 
 func _process(delta: float) -> void:
 	for i in shader_array.size():
-		if shader_array[i].w > 0.0:
-			shader_array[i].w -= delta / 2.0;
-			clamp(shader_array[i].w, 0.0, 1.0)
+		shader_array[i].w -= delta / 2.0;
 	get_parent().get_node("MainShader").mesh.material.set_shader_parameter("noise_points", shader_array)
 
 func add_to_array(a: Array, pos: Vector3, _t: float):
