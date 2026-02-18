@@ -4,7 +4,8 @@
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_onrkg"]
 
-[node name="CharacterBody3D" type="CharacterBody3D" unique_id=442609463]
+[node name="player" type="CharacterBody3D" unique_id=442609463]
+collision_mask = 2
 script = ExtResource("1_4flbx")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1709293477]

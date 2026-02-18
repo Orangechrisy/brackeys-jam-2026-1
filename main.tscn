@@ -1,5 +1,7 @@
 [gd_scene format=4 uid="uid://caf4357qgc83v"]
 
+[ext_resource type="PackedScene" uid="uid://b8tiy00kyft5r" path="res://dialogue_box.tscn" id="1_1bvp3"]
+[ext_resource type="PackedScene" uid="uid://bynmn2w220g51" path="res://dialogue_trigger.tscn" id="1_h2yge"]
 [ext_resource type="PackedScene" uid="uid://bvirut2d6gisx" path="res://player.tscn" id="1_ig7tw"]
 [ext_resource type="Shader" uid="uid://cbl8yrhv8rhri" path="res://edge_detection_shader.gdshader" id="3_h2yge"]
 
@@ -43,12 +45,19 @@ size = Vector2(2, 2)
 
 [node name="Node3D" type="Node" unique_id=845546009]
 
-[node name="CharacterBody3D" parent="." unique_id=442609463 instance=ExtResource("1_ig7tw")]
-transform = Transform3D(-0.70710677, 0, 0.70710677, 0, 1, 0, -0.70710677, 0, -0.70710677, 0, 0, 8.904106)
+[node name="dialogue_trigger" parent="." unique_id=444812224 node_paths=PackedStringArray("interacted_with") instance=ExtResource("1_h2yge")]
+transform = Transform3D(5, 0, 0, 0, 5, 0, 0, 0, 5, 1.7532177, 0.5499513, 13.235827)
+interacted_with = NodePath("../player")
+
+[node name="player" parent="." unique_id=442609463 instance=ExtResource("1_ig7tw")]
+transform = Transform3D(-0.70710677, 0, 0.70710677, 0, 1, 0, -0.70710677, 0, -0.70710677, 0, 0, 1.7492533)
+
+[node name="dialogue_box" parent="." unique_id=2020896369 instance=ExtResource("1_1bvp3")]
 
 [node name="walls n stuff" type="Node" parent="." unique_id=1103541893]
 
 [node name="ground" type="StaticBody3D" parent="walls n stuff" unique_id=1032167318]
+collision_layer = 2
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="walls n stuff/ground" unique_id=2043472662]
 shape = SubResource("BoxShape3D_7dm0k")
@@ -58,6 +67,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
 mesh = SubResource("BoxMesh_ig7tw")
 
 [node name="StaticBody3D" type="StaticBody3D" parent="walls n stuff" unique_id=2092884315]
+collision_layer = 2
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="walls n stuff/StaticBody3D" unique_id=548327549]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5, 15)
@@ -69,6 +79,7 @@ mesh = SubResource("BoxMesh_0xm2m")
 
 [node name="StaticBody3D2" type="StaticBody3D" parent="walls n stuff" unique_id=1334510142]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.5, 14.194841)
+collision_layer = 2
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="walls n stuff/StaticBody3D2" unique_id=141374629]
 shape = SubResource("CylinderShape3D_0xm2m")

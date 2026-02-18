@@ -1,0 +1,17 @@
+[gd_scene format=3 uid="uid://bynmn2w220g51"]
+
+[ext_resource type="Script" uid="uid://xnwge4hoiqwr" path="res://dialogue_trigger.gd" id="1_mui1w"]
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_q8rud"]
+
+[node name="dialogue_trigger" type="Node3D" unique_id=444812224]
+script = ExtResource("1_mui1w")
+dialogues = Array[String](["its a cylinder", "trust me"])
+
+[node name="Area3D" type="Area3D" parent="." unique_id=1897830104]
+collision_layer = 2
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D" unique_id=1142697489]
+shape = SubResource("SphereShape3D_q8rud")
+
+[connection signal="area_entered" from="Area3D" to="." method="start_dialogue"]
