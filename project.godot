@@ -15,6 +15,14 @@ run/main_scene="uid://caf4357qgc83v"
 config/features=PackedStringArray("4.6", "Forward Plus")
 config/icon="res://icon.svg"
 
+[autoload]
+
+noises="*uid://b3kg8dvnkrslb"
+
+[gui]
+
+theme/default_font_antialiasing=0
+
 [input]
 
 move_left={

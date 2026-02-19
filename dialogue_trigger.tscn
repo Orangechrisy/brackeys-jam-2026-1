@@ -14,4 +14,5 @@ collision_layer = 2
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D" unique_id=1142697489]
 shape = SubResource("SphereShape3D_q8rud")
 
-[connection signal="area_entered" from="Area3D" to="." method="start_dialogue"]
+[connection signal="body_entered" from="Area3D" to="." method="_on_area_3d_body_entered"]
+[connection signal="body_exited" from="Area3D" to="." method="_on_area_3d_body_exited"]

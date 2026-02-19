@@ -5,7 +5,7 @@ length = 0.001
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath("dialogue_text:visible_ratio")
+tracks/0/path = NodePath("Container/dialogue_text:visible_ratio")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
@@ -20,7 +20,7 @@ resource_name = "typing"
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath("dialogue_text:visible_ratio")
+tracks/0/path = NodePath("Container/dialogue_text:visible_ratio")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
@@ -48,26 +48,57 @@ mouse_filter = 1
 [node name="canvas" type="CanvasLayer" parent="." unique_id=741647580]
 visible = false
 
-[node name="background" type="ColorRect" parent="canvas" unique_id=1901918998]
-offset_left = 240.0
-offset_top = 455.0
-offset_right = 940.0
-offset_bottom = 625.0
+[node name="Container" type="Control" parent="canvas" unique_id=1861426554]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 246.0
+offset_top = 400.0
+offset_right = -246.0
+offset_bottom = -68.0
+grow_horizontal = 2
+grow_vertical = 2
 
-[node name="ColorRect" type="ColorRect" parent="canvas/background" unique_id=839810586]
-layout_mode = 0
-offset_left = 1.0
-offset_top = 1.0
-offset_right = 699.0
-offset_bottom = 169.0
+[node name="background" type="ColorRect" parent="canvas/Container" unique_id=1901918998]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="canvas/Container" unique_id=287087215]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/margin_left = 2
+theme_override_constants/margin_top = 2
+theme_override_constants/margin_right = 2
+theme_override_constants/margin_bottom = 2
+
+[node name="ColorRect" type="ColorRect" parent="canvas/Container/MarginContainer" unique_id=839810586]
+layout_mode = 2
 color = Color(0, 0, 0, 1)
 
-[node name="dialogue_text" type="RichTextLabel" parent="canvas" unique_id=459138087]
-offset_left = 481.0
-offset_top = 528.0
-offset_right = 713.0
-offset_bottom = 566.0
-text = "dialogue text"
+[node name="dialogue_text" type="RichTextLabel" parent="canvas/Container" unique_id=459138087]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_font_sizes/normal_font_size = 20
+theme_override_font_sizes/bold_font_size = 20
+theme_override_font_sizes/bold_italics_font_size = 20
+theme_override_font_sizes/italics_font_size = 20
+theme_override_font_sizes/mono_font_size = 20
+text = "E"
 horizontal_alignment = 1
 vertical_alignment = 1
 visible_characters = 0
