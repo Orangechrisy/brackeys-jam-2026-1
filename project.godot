@@ -22,6 +22,7 @@ noises="*uid://b3kg8dvnkrslb"
 [gui]
 
 theme/default_font_antialiasing=0
+theme/custom_font="uid://dg8rhttecubl6"
 
 [input]
 
