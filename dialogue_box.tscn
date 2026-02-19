@@ -5,7 +5,7 @@ length = 0.001
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath("Container/dialogue_text:visible_ratio")
+tracks/0/path = NodePath("Container/MarginContainer/dialogue_text:visible_ratio")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
@@ -20,7 +20,7 @@ resource_name = "typing"
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath("Container/dialogue_text:visible_ratio")
+tracks/0/path = NodePath("Container/MarginContainer/dialogue_text:visible_ratio")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
@@ -46,6 +46,7 @@ grow_vertical = 2
 mouse_filter = 1
 
 [node name="canvas" type="CanvasLayer" parent="." unique_id=741647580]
+visible = false
 
 [node name="Container" type="Control" parent="canvas" unique_id=1861426554]
 layout_mode = 3
@@ -85,14 +86,9 @@ theme_override_constants/margin_bottom = 2
 layout_mode = 2
 color = Color(0, 0, 0, 1)
 
-[node name="dialogue_text" type="RichTextLabel" parent="canvas/Container" unique_id=459138087]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-theme_override_font_sizes/normal_font_size = 44
+[node name="dialogue_text" type="RichTextLabel" parent="canvas/Container/MarginContainer" unique_id=459138087]
+layout_mode = 2
+theme_override_font_sizes/normal_font_size = 20
 theme_override_font_sizes/bold_font_size = 20
 theme_override_font_sizes/bold_italics_font_size = 20
 theme_override_font_sizes/italics_font_size = 20

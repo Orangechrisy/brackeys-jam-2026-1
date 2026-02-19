@@ -1,6 +1,6 @@
 extends Node3D
 
-@onready var dialogue_text: RichTextLabel = get_tree().current_scene.get_node("dialogue_box/canvas/Container/dialogue_text")
+@onready var dialogue_text: RichTextLabel = get_tree().current_scene.get_node("dialogue_box/canvas/Container/MarginContainer/dialogue_text")
 @onready var dialogue_animation: AnimationPlayer = get_tree().current_scene.get_node("dialogue_box/canvas/AnimationPlayer")
 @onready var player: CharacterBody3D = get_tree().current_scene.get_node("player")
 @onready var dialogue_box = get_tree().current_scene.get_node("dialogue_box/canvas")
